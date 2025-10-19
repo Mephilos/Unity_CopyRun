@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
@@ -6,26 +7,66 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] int startingChunksAmount = 12;
     [SerializeField] Transform chunkParent;
     [SerializeField] float chunkLength = 10f;
+    [SerializeField] float moveChunkSpeed = 8f;
+
+    List<GameObject> chunks = new List<GameObject>();
 
     void Start()
     {
+        SpawningChunks();
+    }
+
+    void Update()
+    {
+        MoveChunks();
+    }
+    void SpawningChunks()
+    {
         for (int i = 0; i < startingChunksAmount; i++)
         {
-            float spawnPositionZ;
+            SpawningChunk();
+        }
+    }
 
-            if (i == 0)
+    private void SpawningChunk()
+    {
+        float spawnPositionZ = CalculateSpawnPositionZ();
+
+        Vector3 chunkSpawnPos = new Vector3(transform.position.x, transform.position.y, spawnPositionZ);
+
+        GameObject newChunk = Instantiate(chuckPrefab, chunkSpawnPos, Quaternion.identity, chunkParent);
+
+        chunks.Add(newChunk);
+    }
+
+    float CalculateSpawnPositionZ()
+    {
+        float spawnPositionZ;
+        if (chunks.Count == 0)
+        {
+            spawnPositionZ = transform.position.z;
+        }
+
+        else
+        {
+            spawnPositionZ = chunks[chunks.Count - 1].transform.position.z + chunkLength;
+        }
+
+        return spawnPositionZ;
+    }
+    void MoveChunks()
+    {
+        for (int i = 0; i < chunks.Count; i++)
+        {
+            GameObject chunk = chunks[i];
+            chunk.transform.Translate(-transform.forward * (moveChunkSpeed * Time.deltaTime));
+
+            if (chunk.transform.position.z <= Camera.main.transform.position.z - chunkLength)
             {
-                spawnPositionZ = transform.position.z;
+                chunks.Remove(chunk);
+                Destroy(chunk);
+                SpawningChunk();
             }
-
-            else
-            {
-                spawnPositionZ = transform.position.z + (i * chunkLength);
-            }
-
-            Vector3 chunkSpawnPos = new Vector3(transform.position.x, transform.position.y, spawnPositionZ);
-
-            Instantiate(chuckPrefab, chunkSpawnPos, Quaternion.identity, chunkParent);
         }
     }
 }
