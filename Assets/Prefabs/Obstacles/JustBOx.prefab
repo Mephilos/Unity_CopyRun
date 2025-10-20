@@ -113,7 +113,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5055742611926860165, guid: f562e99ca77234b9dbf86432487ac847, type: 3}
       propertyPath: m_Name
-      value: BaseObstacle Variant 2
+      value: JustBOx
       objectReference: {fileID: 0}
     - target: {fileID: 6776232817785264501, guid: f562e99ca77234b9dbf86432487ac847, type: 3}
       propertyPath: m_Size.x
