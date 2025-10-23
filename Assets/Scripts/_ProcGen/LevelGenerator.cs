@@ -7,7 +7,6 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] GameObject chuckPrefab;
     [SerializeField] Transform chunkParent;
     [SerializeField] CameraController cameraController;
-    List<GameObject> chunks = new List<GameObject>();
 
     [Header ("LevelSetting")]
     [SerializeField] int startingChunksAmount = 12;
@@ -17,10 +16,12 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] float maxMoveSpeed = 16f;
     [SerializeField] float minGravity = -4f;
     [SerializeField] float maxGravity = -16f;
-    
 
+    ScoreManager scoreManager;
+    List<GameObject> chunks = new List<GameObject>();
     void Start()
     {
+        scoreManager = FindFirstObjectByType<ScoreManager>();
         SpawningChunks();
     }
 
@@ -47,7 +48,7 @@ public class LevelGenerator : MonoBehaviour
         chunks.Add(newChunkGO);
 
         Chunk newChunk = newChunkGO.GetComponent<Chunk>();
-        newChunk.Initialize(this);
+        newChunk.Initialize(this,scoreManager);
     }
 
     float CalculateSpawnPositionZ()

@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class PlayerCollisionHandler : MonoBehaviour
 {
-    [SerializeField] Animator animator;
     [SerializeField] float HitCooldownTime = 1f;
     [SerializeField] float adjustMoveSpeedAmount = -2f;
     LevelGenerator levelGenerator;
+    Animator animator;
     bool hitFlag = false;
     
     void Start()

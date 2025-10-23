@@ -1,12 +1,14 @@
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Coin : PickUp
 {
     [SerializeField] int coinScore = 100;
     ScoreManager scoreManager;
-    void Start()
+    
+    public void Initialize(ScoreManager scoreManager)
     {
-        scoreManager = FindFirstObjectByType<ScoreManager>();
+        this.scoreManager = scoreManager;
     }
     protected override void OnPickUp()
     {
