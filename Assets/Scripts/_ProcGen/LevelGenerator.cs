@@ -9,8 +9,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] float chunkLength = 10f;
     [SerializeField] float moveChunkSpeed = 8f;
     [SerializeField] float minMoveSpeed = 4f;
-
-
+    [SerializeField] CameraController cameraController;
     List<GameObject> chunks = new List<GameObject>();
 
     void Start()
@@ -67,6 +66,7 @@ public class LevelGenerator : MonoBehaviour
         }
 
         Physics.gravity = new Vector3(Physics.gravity.x, Physics.gravity.y, Physics.gravity.z - speedAmount);
+        cameraController.ChangeFOV(speedAmount);
     }
     void MoveChunks()
     {
