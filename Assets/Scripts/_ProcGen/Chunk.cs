@@ -12,6 +12,8 @@ public class Chunk : MonoBehaviour
     [SerializeField] List<int> availableLanes = new List<int> { 0, 1, 2 };
     [SerializeField] float CoinSeperationLength = 2f;
 
+    LevelGenerator levelGenerator;
+
     void Start()
     {
         SpawnFences();
@@ -19,6 +21,25 @@ public class Chunk : MonoBehaviour
         SpawnCoins();
     }
 
+    public void Initialize(LevelGenerator levelGenerator)
+    {
+        this.levelGenerator = levelGenerator;
+    }
+
+    void SpawnFences()
+    {
+        if (availableLanes.Count <= 0) return;
+
+        int fenceToSpawn = Random.Range(0, lanes.Length);
+
+        for (int i = 0; i < fenceToSpawn; i++)
+        {
+            int selectLane = SelectLane();
+
+            Vector3 fenceSpawnPosition = new Vector3(lanes[selectLane], transform.position.y, transform.position.z);
+            Instantiate(fencePrefab, fenceSpawnPosition, Quaternion.identity, this.transform);
+        }
+    }
     private void SpawnCoins()
     {
         if (Random.value > coinSpawnChance || availableLanes.Count <= 0) return;
@@ -39,21 +60,6 @@ public class Chunk : MonoBehaviour
         }
     }
 
-    void SpawnFences()
-    {
-        if (availableLanes.Count <= 0) return;
-
-        int fenceToSpawn = Random.Range(0, lanes.Length);
-
-        for (int i = 0; i < fenceToSpawn; i++)
-        {
-            int selectLane = SelectLane();
-
-            Vector3 fenceSpawnPosition = new Vector3(lanes[selectLane], transform.position.y, transform.position.z);
-            Instantiate(fencePrefab, fenceSpawnPosition, Quaternion.identity, this.transform);
-        }
-    }
-
     void SpawnApple()
     {   
         if (Random.value > appleSpawnChance || availableLanes.Count <= 0) return;
@@ -61,7 +67,8 @@ public class Chunk : MonoBehaviour
         int selectLane = SelectLane();
 
         Vector3 applePrefabPosition = new Vector3(lanes[selectLane], transform.position.y, transform.position.z);
-        Instantiate(ApplePrefab, applePrefabPosition, Quaternion.identity, this.transform);
+        Apple newApple = Instantiate(ApplePrefab, applePrefabPosition, Quaternion.identity, this.transform).GetComponent<Apple>();
+        newApple.Initialize(levelGenerator);
     }
 
     int SelectLane()

@@ -67,6 +67,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5df7eddd759e4538a82a5f0d0a4ea36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotationSpeed: 100
+  coinScore: 100
 --- !u!1 &2340470571679698580
 GameObject:
   m_ObjectHideFlags: 0

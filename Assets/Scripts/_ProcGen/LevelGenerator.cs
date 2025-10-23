@@ -3,14 +3,21 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
+    [Header ("References")]
     [SerializeField] GameObject chuckPrefab;
-    [SerializeField] int startingChunksAmount = 12;
     [SerializeField] Transform chunkParent;
+    [SerializeField] CameraController cameraController;
+    List<GameObject> chunks = new List<GameObject>();
+
+    [Header ("LevelSetting")]
+    [SerializeField] int startingChunksAmount = 12;
     [SerializeField] float chunkLength = 10f;
     [SerializeField] float moveChunkSpeed = 8f;
     [SerializeField] float minMoveSpeed = 4f;
-    [SerializeField] CameraController cameraController;
-    List<GameObject> chunks = new List<GameObject>();
+    [SerializeField] float maxMoveSpeed = 16f;
+    [SerializeField] float minGravity = -4f;
+    [SerializeField] float maxGravity = -16f;
+    
 
     void Start()
     {
@@ -35,9 +42,12 @@ public class LevelGenerator : MonoBehaviour
 
         Vector3 chunkSpawnPos = new Vector3(transform.position.x, transform.position.y, spawnPositionZ);
 
-        GameObject newChunk = Instantiate(chuckPrefab, chunkSpawnPos, Quaternion.identity, chunkParent);
+        GameObject newChunkGO = Instantiate(chuckPrefab, chunkSpawnPos, Quaternion.identity, chunkParent);
 
-        chunks.Add(newChunk);
+        chunks.Add(newChunkGO);
+
+        Chunk newChunk = newChunkGO.GetComponent<Chunk>();
+        newChunk.Initialize(this);
     }
 
     float CalculateSpawnPositionZ()
@@ -58,15 +68,16 @@ public class LevelGenerator : MonoBehaviour
 
     public void ChangeMoveSpeed(float speedAmount)
     {
-        moveChunkSpeed += speedAmount;
+        float newMoveSpeed = moveChunkSpeed + speedAmount;
+        newMoveSpeed = Mathf.Clamp(newMoveSpeed, minMoveSpeed, maxMoveSpeed);
 
-        if (moveChunkSpeed < minMoveSpeed)
+        if (newMoveSpeed != moveChunkSpeed)
         {
-            moveChunkSpeed = minMoveSpeed;
+            float newGravity = Physics.gravity.z - speedAmount;
+            newGravity = Mathf.Clamp(newGravity, minGravity, maxGravity);
+            Physics.gravity = new Vector3(Physics.gravity.x, Physics.gravity.y, newGravity);
+            cameraController.ChangeFOV(speedAmount);
         }
-
-        Physics.gravity = new Vector3(Physics.gravity.x, Physics.gravity.y, Physics.gravity.z - speedAmount);
-        cameraController.ChangeFOV(speedAmount);
     }
     void MoveChunks()
     {

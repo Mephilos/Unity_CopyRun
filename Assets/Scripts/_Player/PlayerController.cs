@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 5f;
+    [SerializeField] float moveSpeed = 6f;
     [SerializeField] float moveClampX = 7f;
     [SerializeField] float moveClampZ = 2f;
     Vector2 movement;
