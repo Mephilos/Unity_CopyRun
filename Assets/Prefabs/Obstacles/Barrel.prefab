@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Barrel
       objectReference: {fileID: 0}
+    - target: {fileID: 8045056377981576810, guid: f562e99ca77234b9dbf86432487ac847, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6776232817785264501, guid: f562e99ca77234b9dbf86432487ac847, type: 3}
     m_RemovedGameObjects:
