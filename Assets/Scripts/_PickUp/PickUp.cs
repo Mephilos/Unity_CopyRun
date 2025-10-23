@@ -1,10 +1,21 @@
 using UnityEngine;
 
-public class PickUp : MonoBehaviour
+public abstract class PickUp : MonoBehaviour
 {
+    [SerializeField] float rotationSpeed = 100f;
+
+    void Update()
+    {
+        transform.Rotate(Vector3.up,rotationSpeed * Time.deltaTime);
+    }
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(ProjectConstants.PLAYER_TAG))
-        Debug.Log(other.gameObject.name);
+        {
+            OnPickUp();
+            Destroy(gameObject);
+        }
     }
+
+    protected abstract void OnPickUp();
 }
