@@ -12,6 +12,6 @@ public class Coin : PickUp
     }
     protected override void OnPickUp()
     {
-        scoreManager.IncreseScore(coinScore);
+        scoreManager.IncreaseScore(coinScore);
     }
 }

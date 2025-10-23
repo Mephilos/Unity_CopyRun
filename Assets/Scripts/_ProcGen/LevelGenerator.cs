@@ -4,8 +4,9 @@ using UnityEngine;
 public class LevelGenerator : MonoBehaviour
 {
     [Header ("References")]
-    [SerializeField] GameObject chuckPrefab;
+    [SerializeField] List<GameObject> chunkPrefabs;
     [SerializeField] Transform chunkParent;
+    [SerializeField] GameObject checkPointChunk;
     [SerializeField] CameraController cameraController;
 
     [Header ("LevelSetting")]
@@ -17,6 +18,8 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] float minGravity = -4f;
     [SerializeField] float maxGravity = -16f;
 
+    int checkPointSpawnIntervel = 8;
+    int chunkCounter = 0;
     ScoreManager scoreManager;
     List<GameObject> chunks = new List<GameObject>();
     void Start()
@@ -28,43 +31,6 @@ public class LevelGenerator : MonoBehaviour
     void Update()
     {
         MoveChunks();
-    }
-    void SpawningChunks()
-    {
-        for (int i = 0; i < startingChunksAmount; i++)
-        {
-            SpawningChunk();
-        }
-    }
-
-    private void SpawningChunk()
-    {
-        float spawnPositionZ = CalculateSpawnPositionZ();
-
-        Vector3 chunkSpawnPos = new Vector3(transform.position.x, transform.position.y, spawnPositionZ);
-
-        GameObject newChunkGO = Instantiate(chuckPrefab, chunkSpawnPos, Quaternion.identity, chunkParent);
-
-        chunks.Add(newChunkGO);
-
-        Chunk newChunk = newChunkGO.GetComponent<Chunk>();
-        newChunk.Initialize(this,scoreManager);
-    }
-
-    float CalculateSpawnPositionZ()
-    {
-        float spawnPositionZ;
-        if (chunks.Count == 0)
-        {
-            spawnPositionZ = transform.position.z;
-        }
-
-        else
-        {
-            spawnPositionZ = chunks[chunks.Count - 1].transform.position.z + chunkLength;
-        }
-
-        return spawnPositionZ;
     }
 
     public void ChangeMoveSpeed(float speedAmount)
@@ -80,6 +46,60 @@ public class LevelGenerator : MonoBehaviour
             cameraController.ChangeFOV(speedAmount);
         }
     }
+
+    void SpawningChunks()
+    {
+        for (int i = 0; i < startingChunksAmount; i++)
+        {
+            SpawningChunk();
+        }
+    }
+
+    void SpawningChunk()
+    {
+
+        float spawnPositionZ = CalculateSpawnPositionZ();
+
+        Vector3 chunkSpawnPos = new Vector3(transform.position.x, transform.position.y, spawnPositionZ);
+
+        GameObject chunkToSpawn = SelectSpawnChunk();
+
+        GameObject newChunkGO = Instantiate(chunkToSpawn, chunkSpawnPos, Quaternion.identity, chunkParent);
+
+        chunks.Add(newChunkGO);
+
+        Chunk newChunk = newChunkGO.GetComponent<Chunk>();
+        newChunk.Initialize(this, scoreManager);
+        chunkCounter++;
+    }
+
+    GameObject SelectSpawnChunk()
+    {
+        if (chunkCounter % checkPointSpawnIntervel == 0 && chunkCounter != 0)
+        {
+            return checkPointChunk;
+        }
+        else
+        {
+            return chunkPrefabs[Random.Range(0, chunkPrefabs.Count)];
+        }
+    }
+
+    float CalculateSpawnPositionZ()
+    {
+        float spawnPositionZ;
+        if (chunks.Count == 0)
+        {
+            spawnPositionZ = transform.position.z;
+        }
+        else
+        {
+            spawnPositionZ = chunks[chunks.Count - 1].transform.position.z + chunkLength;
+        }
+
+        return spawnPositionZ;
+    }
+
     void MoveChunks()
     {
         for (int i = 0; i < chunks.Count; i++)

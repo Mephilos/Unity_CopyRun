@@ -1,14 +1,17 @@
 using UnityEngine;
 using TMPro;
 using System;
+using NUnit.Framework;
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] PlayerController playerController;
     [SerializeField] TMP_Text timeText;
     [SerializeField] GameObject gameOverText;
     [SerializeField] float startTime = 5f;
 
     float timeLeft;
-
+    bool isGameOver;
+    public bool GameOver => isGameOver;
     void Start()
     {
         timeLeft = startTime;
@@ -16,23 +19,27 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        RemaingTime();
-        GameOver();
+        if (isGameOver) return;
+        DecreaseTime();
+        PlayerGameOver();
     }
 
-    void RemaingTime()
+    void DecreaseTime()
     {
         timeLeft -= Time.deltaTime;
         timeText.text = timeLeft.ToString("F1");
     }
 
-    void GameOver()
+    void PlayerGameOver()
     {
         if (timeLeft <= 0)
         {
+            isGameOver = true;
             timeLeft = 0;
             Time.timeScale = 0.2f;
+            playerController.enabled = false;
             gameOverText.SetActive(true);
         }
     }
+
 }
