@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     float timeLeft;
     bool isGameOver;
     public bool GameOver => isGameOver;
+
     void Start()
     {
         timeLeft = startTime;
@@ -23,7 +24,10 @@ public class GameManager : MonoBehaviour
         DecreaseTime();
         PlayerGameOver();
     }
-
+    public void IncreaseTime(float addTime)
+    {
+        timeLeft += addTime;
+    }
     void DecreaseTime()
     {
         timeLeft -= Time.deltaTime;
