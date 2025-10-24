@@ -15,8 +15,8 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] float moveChunkSpeed = 8f;
     [SerializeField] float minMoveSpeed = 4f;
     [SerializeField] float maxMoveSpeed = 16f;
-    [SerializeField] float minGravity = -4f;
-    [SerializeField] float maxGravity = -16f;
+    [SerializeField] float minGravity = -6f;
+    [SerializeField] float maxGravity = -20f;
 
     int checkPointSpawnIntervel = 8;
     int chunkCounter = 0;
