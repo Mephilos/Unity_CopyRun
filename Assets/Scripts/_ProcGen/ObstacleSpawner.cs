@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ObstacleSpawner : MonoBehaviour
@@ -9,14 +8,18 @@ public class ObstacleSpawner : MonoBehaviour
     [SerializeField] float ObstacleSpawnTime = 1f;
     [SerializeField] Transform obstacleParent;
     [SerializeField] float spawnWidth = 4f;
-
-    int ObstaclesSpawned = 0;
-
+    [SerializeField] float minObstacleSpawnTime = .4f;
     void Start()
     {
         StartCoroutine(SpawnObstacleRoutine());
     }
     
+    public void DecreaseObstacleRespawnTime(float amount)
+    {
+        ObstacleSpawnTime -= amount;
+        if (ObstacleSpawnTime <= minObstacleSpawnTime) ObstacleSpawnTime = minObstacleSpawnTime;
+    }
+
     IEnumerator SpawnObstacleRoutine()
     {
         while (true)
@@ -26,7 +29,6 @@ public class ObstacleSpawner : MonoBehaviour
 
             yield return new WaitForSeconds(ObstacleSpawnTime);
             Instantiate(obstaclePrefab, spawnPosition, Random.rotation, obstacleParent);
-            ObstaclesSpawned++;
         }
     }
 }
